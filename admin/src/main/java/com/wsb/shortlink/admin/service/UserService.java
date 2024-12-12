@@ -4,7 +4,9 @@ package com.wsb.shortlink.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wsb.shortlink.admin.dao.entity.UserDO;
 import com.wsb.shortlink.admin.dto.req.UserRegisterReqDTO;
+import com.wsb.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.wsb.shortlink.admin.dto.resp.UserRespDTO;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 用户接口层
@@ -33,5 +35,12 @@ public interface UserService extends IService<UserDO> {
      * @param requestParam 注册用户请求参数
      */
     void register(UserRegisterReqDTO requestParam);
+
+    /**
+     * 根据用户名修改用户
+     *
+     * @param requestParam 修改用户请求参数
+     */
+    void update(UserUpdateReqDTO requestParam);
 
 }
