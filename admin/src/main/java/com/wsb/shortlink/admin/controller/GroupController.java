@@ -22,12 +22,18 @@ public class GroupController {
 
     private final GroupService groupService;
 
+    /**
+     * 新增短链接分组
+     */
     @PostMapping("/api/short-link/v1/group")
     public Result<Void> save(@RequestBody ShortLinkGroupSaveReqDTO requestParam){
         groupService.saveGroup(requestParam.getName());
         return Results.success();
     }
 
+    /**
+     * 查询短链接分组集合
+     */
     @GetMapping("/api/short-link/v1/group")
     public Result<List<ShortLinkGroupRespDTO>> listGroup(){
         return Results.success(groupService.listGroup());
