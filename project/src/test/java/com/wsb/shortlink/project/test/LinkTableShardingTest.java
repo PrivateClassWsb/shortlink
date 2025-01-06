@@ -12,6 +12,7 @@ public class LinkTableShardingTest {
             "    origin_url      varchar(1024) collate utf8mb4_general_ci null comment '原始链接',\n" +
             "    click_num       int default 0                            null comment '点击量',\n" +
             "    gid             varchar(32) collate utf8mb4_general_ci   null comment '分组id',\n" +
+            "    favicon         varchar(256) collate utf8mb4_general_ci  null comment '网站图标',\n" +
             "    enable_status   tinyint(1)                               null comment '启用标识 0：启用 1：未启用',\n" +
             "    created_type    tinyint(1)                               null comment '创建类型 0：接口创建 1：控制台创建',\n" +
             "    valid_date_type tinyint(1)                               null comment '有效期类型 0：永久有效 1：自定义',\n" +
