@@ -51,6 +51,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getDelFlag, 0)
                 .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime);
         List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
+
         return BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
     }
 
