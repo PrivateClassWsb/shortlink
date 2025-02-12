@@ -83,7 +83,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Override
     public List<ShortLinkGroupCountQueryRespDTO> listGroupShortLinkCount(List<String> requestParam) {
         QueryWrapper<ShortLinkDO> queryWrapper = Wrappers.query(new ShortLinkDO())
-                .select("gid, count(*)")
+                .select("gid as gid, count(*) as shortLinkCount")
                 .in("gid", requestParam)
                 .eq("enable_status", 0)
                 .groupBy("gid");
