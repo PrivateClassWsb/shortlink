@@ -24,6 +24,7 @@ import com.wsb.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.wsb.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.wsb.shortlink.project.service.ShortLinkService;
 import com.wsb.shortlink.project.toolkit.HashUtil;
+import com.wsb.shortlink.project.toolkit.LinkUtil;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -88,6 +89,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             // 并发环境下有可能出现这个异常
             throw new ServiceException(String.format("短链接：%s 生成重复", fullShortUrl));
         }
+        stringRedisTemplate.opsForValue().set(
+                String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl),
+                requestParam.getOriginUrl(),
+                LinkUtil.getLinkCacheValidTime(requestParam.getValidDate()),
+                TimeUnit.MILLISECONDS
+        );
         shortUriCreateCachePenetrationBloomFilter.add(fullShortUrl);
         return ShortLinkCreateRespDTO.builder()
                 .gid(requestParam.getGid())
