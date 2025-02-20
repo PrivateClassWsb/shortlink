@@ -2,6 +2,7 @@ package com.wsb.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wsb.shortlink.admin.common.convention.result.Result;
+import com.wsb.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
 import com.wsb.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.wsb.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 

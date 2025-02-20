@@ -9,8 +9,8 @@ import com.wsb.shortlink.admin.common.convention.exception.ServiceException;
 import com.wsb.shortlink.admin.common.convention.result.Result;
 import com.wsb.shortlink.admin.dao.entity.GroupDO;
 import com.wsb.shortlink.admin.dao.mapper.GroupMapper;
+import com.wsb.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
 import com.wsb.shortlink.admin.remote.ShortLinkRemoteService;
-import com.wsb.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
 import com.wsb.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.wsb.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 import com.wsb.shortlink.admin.service.RecycleBinService;
@@ -43,4 +43,6 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         requestParam.setGidList(groupDOList.stream().map(GroupDO::getGid).toList());
         return shortLinkRemoteService.pageRecyleBinShortLink(requestParam);
     }
+
+
 }
