@@ -1,9 +1,5 @@
 package com.wsb.shortlink.admin.dto.resp;
 
-import com.wsb.shortlink.project.dto.resp.ShortLinkStatsLocaleCNRespDTO;
-import com.wsb.shortlink.project.dto.resp.ShortLinkStatsNetworkRespDTO;
-import com.wsb.shortlink.project.dto.resp.ShortLinkStatsTopIpRespDTO;
-import com.wsb.shortlink.project.dto.resp.ShortLinkStatsUvRespDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
