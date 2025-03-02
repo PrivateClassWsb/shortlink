@@ -7,6 +7,7 @@ import com.wsb.shortlink.admin.dto.req.ShortLinkStatsReqDTO;
 import com.wsb.shortlink.admin.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import com.wsb.shortlink.admin.dto.resp.ShortLinkStatsRespDTO;
 import com.wsb.shortlink.admin.remote.ShortLinkRemoteService;
+import com.wsb.shortlink.admin.remote.dto.req.ShortLinkGroupStatsReqDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,4 +40,13 @@ public class ShortLinkStatsController {
     public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
         return shortLinkRemoteService.shortLinkStatsAccessRecord(requestParam);
     }
+
+    /**
+     * 访问分组短链接指定时间内监控数据
+     */
+    @GetMapping("/api/short-link/admin/v1/stats/group")
+    public Result<ShortLinkStatsRespDTO> groupShortLinkStats(ShortLinkGroupStatsReqDTO requestParam) {
+        return shortLinkRemoteService.groupShortLinkStats(requestParam);
+    }
+
 }
