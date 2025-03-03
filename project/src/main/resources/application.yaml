@@ -22,3 +22,16 @@ short-link:
   stats:
     locale:
       amap-key: a31216cf185fd2d9a3ef4cafdc7c5784
+  goto-domain:
+    white-list:
+      enable: true
+      names: '知乎,掘金,博客园'
+      details:
+        - zhihu.com
+        - juejin.cn
+        - cnblogs.com
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
