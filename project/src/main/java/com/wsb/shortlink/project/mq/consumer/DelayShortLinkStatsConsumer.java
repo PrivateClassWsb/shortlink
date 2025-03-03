@@ -26,7 +26,7 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
 
     public void onMessage() {
         Executors.newSingleThreadExecutor(  // 创建单线程线程池
-            runnable -> {
+            runnable -> {   // 自定义线程工厂
                 Thread thread = new Thread(runnable);
                 thread.setName("delay_short-link_stats_consumer");  // 线程命名
                 thread.setDaemon(Boolean.TRUE); // 设置为守护线程
