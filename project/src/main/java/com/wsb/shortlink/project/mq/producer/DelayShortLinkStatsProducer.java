@@ -1,0 +1,33 @@
+package com.wsb.shortlink.project.mq.producer;
+
+import com.wsb.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
+import lombok.RequiredArgsConstructor;
+import org.redisson.api.RBlockingDeque;
+import org.redisson.api.RDelayedQueue;
+import org.redisson.api.RedissonClient;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.wsb.shortlink.project.common.constant.RedisKeyConstant.DELAY_QUEUE_STATS_KEY;
+
+/**
+ * 延迟消费短链接统计发送者
+ */
+@Component
+@RequiredArgsConstructor
+public class DelayShortLinkStatsProducer {
+
+    private final RedissonClient redissonClient;
+
+    /**
+     * 发送延迟消费短链接统计
+     *
+     * @param statsRecord 短链接统计实体参数
+     */
+    public void send(ShortLinkStatsRecordDTO statsRecord) {
+        RBlockingDeque<ShortLinkStatsRecordDTO> blockingDeque = redissonClient.getBlockingDeque(DELAY_QUEUE_STATS_KEY); // 获取阻塞队列
+        RDelayedQueue<ShortLinkStatsRecordDTO> delayedQueue = redissonClient.getDelayedQueue(blockingDeque); // 创建延迟队列
+        delayedQueue.offer(statsRecord, 5, TimeUnit.SECONDS); // 发送消息，延迟5秒
+    }
+}
