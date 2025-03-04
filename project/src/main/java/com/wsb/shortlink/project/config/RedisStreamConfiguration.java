@@ -19,6 +19,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.wsb.shortlink.project.common.constant.RedisKeyConstant.SHORT_LINK_STATS_STREAM_GROUP_KEY;
+import static com.wsb.shortlink.project.common.constant.RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY;
+
 /**
  * Redis Stream 消息队列配置
  */
@@ -28,11 +31,6 @@ public class RedisStreamConfiguration {
 
     private final RedisConnectionFactory redisConnectionFactory;
     private final ShortLinkStatsSaveConsumer shortLinkStatsSaveConsumer;
-
-    @Value("${spring.data.redis.channel-topic.short-link-stats}")
-    private String topic;
-    @Value("${spring.data.redis.channel-topic.short-link-stats-group}")
-    private String group;
 
     // 创建异步执行器. 创建一个线程池，用来异步执行从 Redis Stream 拉取消息的任务。
     @Bean
@@ -69,8 +67,8 @@ public class RedisStreamConfiguration {
         // 创建 ListenerContainer。一个消息监听容器
         StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer =
                 StreamMessageListenerContainer.create(redisConnectionFactory, options);
-        streamMessageListenerContainer.receiveAutoAck(Consumer.from(group, "stats-consumer"), // 定义消费者所在的组和消费者名称。
-                StreamOffset.create(topic, ReadOffset.lastConsumed()), shortLinkStatsSaveConsumer); // 指定从哪个 Stream（topic）开始监听，从上次消费结束的位置开始读取新消息。
+        streamMessageListenerContainer.receiveAutoAck(Consumer.from(SHORT_LINK_STATS_STREAM_GROUP_KEY, "stats-consumer"), // 定义消费者所在的组和消费者名称。
+                StreamOffset.create(SHORT_LINK_STATS_STREAM_TOPIC_KEY, ReadOffset.lastConsumed()), shortLinkStatsSaveConsumer); // 指定从哪个 Stream（topic）开始监听，从上次消费结束的位置开始读取新消息。
         return streamMessageListenerContainer; // 返回 ListenerContainer：Spring 会管理它的生命周期，自动启动和关闭。
     }
 }
