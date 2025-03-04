@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wsb.shortlink.admin.common.convention.exception.ClientException;
+import com.wsb.shortlink.admin.common.convention.exception.ServiceException;
 import com.wsb.shortlink.admin.common.enums.UserErrorCodeEnum;
 import com.wsb.shortlink.admin.dao.entity.UserDO;
 import com.wsb.shortlink.admin.dao.mapper.UserMapper;
@@ -52,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UserDO userDO = baseMapper.selectOne(queryWrapper);
         UserRespDTO result = new UserRespDTO();
         if (userDO == null) {
-            throw new ClientException(UserErrorCodeEnum.USER_NULL);
+            throw new ServiceException(UserErrorCodeEnum.USER_NULL);
         }
         BeanUtils.copyProperties(userDO, result);
         return result;
