@@ -8,9 +8,11 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.wsb.shortlink.project.common.convention.exception.ServiceException;
 import com.wsb.shortlink.project.dao.entity.*;
 import com.wsb.shortlink.project.dao.mapper.*;
 import com.wsb.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
+import com.wsb.shortlink.project.mq.idempotent.MessageQueueIdempotentHandler;
 import com.wsb.shortlink.project.mq.producer.DelayShortLinkStatsProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,7 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
     private final LinkStatsTodayMapper linkStatsTodayMapper;
     private final DelayShortLinkStatsProducer delayShortLinkStatsProducer;
     private final StringRedisTemplate stringRedisTemplate;
+    private final MessageQueueIdempotentHandler messageQueueIdempotentHandler;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -59,14 +62,30 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
     public void onMessage(MapRecord<String, String, String> message) {
         String stream = message.getStream(); // topic
         RecordId id = message.getId();
-        Map<String, String> producerMap = message.getValue();
-        String fullShortUrl = producerMap.get("fullShortUrl");
-        if (StrUtil.isNotBlank(fullShortUrl)) {
-            String gid = producerMap.get("gid");
-            ShortLinkStatsRecordDTO statsRecord = JSON.parseObject(producerMap.get("statsRecord"), ShortLinkStatsRecordDTO.class);
-            actualSaveShortLinkStats(fullShortUrl, gid, statsRecord);
+
+        if (!messageQueueIdempotentHandler.isMessageProcessed(id.toString())) {
+            // 判断当前的这个消息流程是否执行完成 （当tyr中消息执行完了却突然宕机 比如断电之类 需要这里的判断）
+            if (messageQueueIdempotentHandler.isAccomplish(id.toString())) {
+                return;
+            }
+            throw new ServiceException("消息未完成流程，需要消息队列重试");
         }
-        stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue()); // 防止消息重复消费
+        try {
+            Map<String, String> producerMap = message.getValue();
+            String fullShortUrl = producerMap.get("fullShortUrl");
+            if (StrUtil.isNotBlank(fullShortUrl)) {
+                String gid = producerMap.get("gid");
+                ShortLinkStatsRecordDTO statsRecord = JSON.parseObject(producerMap.get("statsRecord"), ShortLinkStatsRecordDTO.class);
+                actualSaveShortLinkStats(fullShortUrl, gid, statsRecord);
+            }
+            stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue());
+        } catch (Throwable ex) {
+            // 宕机
+            messageQueueIdempotentHandler.delMessageProcessed(id.toString());
+            log.error("记录短链接监控消费异常", ex);
+        }
+        messageQueueIdempotentHandler.setAccomplish(id.toString());
+
     }
 
     public void actualSaveShortLinkStats(String fullShortUrl, String gid, ShortLinkStatsRecordDTO statsRecord) {
