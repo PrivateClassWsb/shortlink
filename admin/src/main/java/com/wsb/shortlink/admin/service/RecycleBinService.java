@@ -1,6 +1,7 @@
 package com.wsb.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wsb.shortlink.admin.common.convention.result.Result;
 import com.wsb.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
 import com.wsb.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
@@ -17,6 +18,6 @@ public interface RecycleBinService {
      * @param requestParam 请求参数
      * @return 返回参数包装
      */
-    Result<IPage<ShortLinkPageRespDTO>> pageRecyleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
+    Result<Page<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
 
 }
