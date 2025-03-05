@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.wsb.shortlink.admin.common.constant.RedisCacheConstant.USER_LOGIN_KEY;
-import static com.wsb.shortlink.admin.common.enums.UserErrorCodeEnum.USER_TOKEN_FAIL;
 
 
 /**
