@@ -20,6 +20,7 @@ import static com.wsb.shortlink.project.common.constant.RedisKeyConstant.DELAY_Q
 /**
  * 延迟记录短链接统计组件
  */
+@Deprecated
 @Slf4j
 @Component
 @RequiredArgsConstructor
