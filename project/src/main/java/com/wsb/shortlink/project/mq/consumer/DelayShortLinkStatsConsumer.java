@@ -67,6 +67,6 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        onMessage();    // Spring Bean初始化完成后启动消费者
+//        onMessage();    // Spring Bean初始化完成后启动消费者
     }
 }
