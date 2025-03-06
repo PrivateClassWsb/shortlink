@@ -44,7 +44,7 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
                     try {
                         ShortLinkStatsRecordDTO statsRecord = delayedQueue.poll();
                         if (statsRecord != null) {
-                            if (messageQueueIdempotentHandler.isMessageProcessed(statsRecord.getKeys())) {
+                            if (messageQueueIdempotentHandler.isMessageBeingConsumed(statsRecord.getKeys())) {
                                 if (messageQueueIdempotentHandler.isAccomplish(statsRecord.getKeys())) {
                                     return;
                                 }
