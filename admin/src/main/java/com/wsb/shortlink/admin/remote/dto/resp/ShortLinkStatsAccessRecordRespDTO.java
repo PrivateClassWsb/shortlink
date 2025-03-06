@@ -1,4 +1,4 @@
-package com.wsb.shortlink.admin.dto.resp;
+package com.wsb.shortlink.admin.remote.dto.resp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

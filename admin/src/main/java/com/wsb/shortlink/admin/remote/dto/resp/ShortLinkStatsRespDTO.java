@@ -1,4 +1,4 @@
-package com.wsb.shortlink.admin.dto.resp;
+package com.wsb.shortlink.admin.remote.dto.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
