@@ -1,16 +1,12 @@
 package com.wsb.shortlink.project.service.impl;
 
+
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -29,9 +25,7 @@ import com.wsb.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.wsb.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.wsb.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
 import com.wsb.shortlink.project.dto.resp.*;
-import com.wsb.shortlink.project.mq.producer.DelayShortLinkStatsProducer;
 import com.wsb.shortlink.project.mq.producer.ShortLinkStatsSaveProducer;
-import com.wsb.shortlink.project.service.LinkStatsTodayService;
 import com.wsb.shortlink.project.service.ShortLinkService;
 import com.wsb.shortlink.project.toolkit.HashUtil;
 import com.wsb.shortlink.project.toolkit.LinkUtil;
@@ -64,7 +58,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.wsb.shortlink.project.common.constant.RedisKeyConstant.*;
-import static com.wsb.shortlink.project.common.constant.ShortLinkConstant.AMAP_REMOTE_URL;
 
 /**
  * 短链接接口实现层
@@ -362,6 +355,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             if (StrUtil.isNotBlank(originalLink)) {
                 shortLinkStats(buildLinkStatsRecordAndSetUser(fullShortUrl, request, response));
                 ((HttpServletResponse) response).sendRedirect(originalLink);
+                return;
+            }
+            gotoIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl));
+            if (StrUtil.isNotBlank(gotoIsNullShortLink)) {
+                ((HttpServletResponse) response).sendRedirect("/page/notfound");
                 return;
             }
             LambdaQueryWrapper<ShortLinkGotoDO> linkGotoQueryWrapper = Wrappers.lambdaQuery(ShortLinkGotoDO.class)
