@@ -41,3 +41,22 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:mapper/*.xml
+
+
+rocketmq:
+#  指定 RocketMQ 的 NameServer 地址，生产者和消费者需要连接到 NameServer 才能发现 Broker 并进行消息发送或消费。
+  name-server: common-rocketmq-dev.magestack.cn:9876
+  producer:
+#    指定生产者组（Producer Group）的名称，生产者组用于管理多个生产者实例。
+    group: short-link_project-service_stats-save_pg_wangsibo
+#    指定生产者发送消息的主题（Topic）
+    topic: short-link_project-service_topic_wangsibo
+#    设置发送消息的超时时间，单位是毫秒（ms）。
+    send-message-timeout: 2000
+#    同步消息发送失败时的重试次数。
+    retry-times-when-send-failed: 1
+#    异步消息发送失败时的重试次数。
+    retry-times-when-send-async-failed: 1
+  consumer:
+#    指定消费者组（Consumer Group）的名称，消费者组用于多个消费者实例共同消费一个 Topic 的消息。
+    group: short-link_project-service_stats-save_cg_wangsibo
