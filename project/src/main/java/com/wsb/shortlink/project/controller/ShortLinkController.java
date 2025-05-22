@@ -42,11 +42,11 @@ public class ShortLinkController {
      * 创建短链接
      */
     @PostMapping("/api/short-link/v1/create")
-    @SentinelResource(
-            value = "create_short-link",
-            blockHandler = "createShortLinkBlockHandlerMethod",
-            blockHandlerClass = CustomBlockHandler.class
-    )
+//    @SentinelResource(
+//            value = "create_short-link",
+//            blockHandler = "createShortLinkBlockHandlerMethod",
+//            blockHandlerClass = CustomBlockHandler.class
+//    )
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         return Results.success(shortLinkService.createShortLink(requestParam));
     }

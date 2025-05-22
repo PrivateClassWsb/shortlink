@@ -101,7 +101,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .totalUip(0)
                 .delTime(0L)
                 .fullShortUrl(fullShortUrl)
-                .favicon(getFavicon(requestParam.getOriginUrl()))
+//                .favicon(getFavicon(requestParam.getOriginUrl()))
                 .build();
         ShortLinkGotoDO linkGotoDO = ShortLinkGotoDO.builder()
                 .fullShortUrl(fullShortUrl)
@@ -156,7 +156,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .totalUip(0)
                     .delTime(0L)
                     .fullShortUrl(fullShortUrl)
-                    .favicon(getFavicon(requestParam.getOriginUrl()))
+//                    .favicon(getFavicon(requestParam.getOriginUrl()))
                     .build();
             ShortLinkGotoDO linkGotoDO = ShortLinkGotoDO.builder()
                     .fullShortUrl(fullShortUrl)
@@ -414,8 +414,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .map(Cookie::getValue)
                     .ifPresentOrElse(each -> {
                         uv.set(each);
+                        // 可能有人伪造了一个uv的uuid，或者redis宕机清空之类，所以即使有uv的Cookie redis中也可能不存在。
                         Long uvAdded = stringRedisTemplate.opsForSet().add(SHORT_LINK_STATS_UV_KEY + fullShortUrl, each);
                         uvFirstFlag.set(uvAdded != null && uvAdded > 0L);
+
                     }, addResponseCookieTask);
         } else {
             addResponseCookieTask.run();
