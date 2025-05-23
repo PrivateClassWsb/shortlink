@@ -1011,21 +1011,18 @@ create table t_link_os_stats
 )
     comment '短链接监控操作系统访问状态' collate = utf8mb4_general_ci;
 
-create table t_link_stats_today
-(
-    id             bigint auto_increment comment 'ID'
-        primary key,
-    gid            varchar(32) collate utf8mb4_general_ci default 'default' null comment '分组标识',
-    full_short_url varchar(128) collate utf8mb4_general_ci                  null comment '短链接',
-    date           date                                                     null comment '日期',
-    today_pv       int                                    default 0         null comment '今日PV',
-    today_uv       int                                    default 0         null comment '今日UV',
-    today_uip      int                                    default 0         null comment '今日IP数',
-    create_time    datetime                                                 null comment '创建时间',
-    update_time    datetime                                                 null comment '修改时间',
-    del_flag       tinyint(1)                                               null comment '删除标识 0：未删除 1：已删除',
-    constraint `idx_unique_full-short-url`
-        unique (full_short_url)
+CREATE TABLE t_link_stats_today (
+      id             bigint auto_increment comment 'ID' primary key,
+      gid            varchar(32) collate utf8mb4_general_ci default 'default' null comment '分组标识',
+      full_short_url varchar(128) collate utf8mb4_general_ci null comment '短链接',
+      date           date null comment '日期',
+      today_pv       int default 0 null comment '今日PV',
+      today_uv       int default 0 null comment '今日UV',
+      today_uip      int default 0 null comment '今日IP数',
+      create_time    datetime null comment '创建时间',
+      update_time    datetime null comment '修改时间',
+      del_flag       tinyint(1) null comment '删除标识 0：未删除 1：已删除',
+      UNIQUE KEY `idx_unique_today_stats` (`full_short_url`, `gid`, `date`)
 );
 
 create table t_user_0
