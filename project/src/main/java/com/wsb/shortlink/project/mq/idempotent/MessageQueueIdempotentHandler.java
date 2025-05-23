@@ -26,6 +26,7 @@ public class MessageQueueIdempotentHandler {
      */
     public boolean isMessageBeingConsumed(String messageId) {
         String key = IDEMPOTENT_KEY_PREFIX + messageId;
+        // 仅当 Redis 中 不存在 指定的 key 时，才会设置它的值为 "0",并返回 true。如果 key 已存在，则不会修改它的值，并返回 false。
         return Boolean.FALSE.equals(stringRedisTemplate.opsForValue().setIfAbsent(key, "0", 2, TimeUnit.MINUTES));
     }
 
